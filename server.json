@@ -1,0 +1,50 @@
+{
+	"$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+	"name": "ai.slidingbox/hydrate-dehydrate",
+	"title": "Slidingbox Hydrate/Dehydrate",
+	"description": "Hand a secret to another agent as an encrypted, pay-per-read token, delivered exactly once.",
+	"version": "0.1.3",
+	"websiteUrl": "https://slidingbox.ai",
+	"packages": [
+		{
+			"registryType": "npm",
+			"registryBaseUrl": "https://registry.npmjs.org",
+			"identifier": "@slidingbox/hydrate-dehydrate-mcp",
+			"version": "0.1.3",
+			"runtimeHint": "npx",
+			"transport": { "type": "stdio" },
+			"environmentVariables": [
+				{
+					"name": "SLIDINGBOX_API_KEY",
+					"description": "Evaluation key (sbk_<id>.<hmac>) covering a fixed number of free reads. Ask support@slidingbox.ai.",
+					"isRequired": false,
+					"isSecret": true,
+					"format": "string"
+				},
+				{
+					"name": "SLIDINGBOX_PRIVATE_KEY",
+					"description": "Base wallet private key holding USDC. Reads cost $0.02 each, paid per call over x402. Use a wallet funded for this and nothing else.",
+					"isRequired": false,
+					"isSecret": true,
+					"format": "string"
+				},
+				{
+					"name": "SLIDINGBOX_URL",
+					"description": "Service base URL.",
+					"isRequired": false,
+					"isSecret": false,
+					"format": "string",
+					"default": "https://slidingbox.ai"
+				},
+				{
+					"name": "SLIDINGBOX_NETWORK",
+					"description": "CAIP-2 chain for payment. Base mainnet by default.",
+					"isRequired": false,
+					"isSecret": false,
+					"format": "string",
+					"default": "eip155:8453"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,69 @@
+{
+	"manifest_version": "0.3",
+	"name": "slidingbox-hydrate-dehydrate",
+	"display_name": "Slidingbox Hydrate/Dehydrate",
+	"version": "0.1.3",
+	"description": "Hand a secret to another agent as an encrypted, pay-per-read token, delivered exactly once.",
+	"long_description": "`store_secret` encrypts on your machine (AES-256-GCM) and returns one token. Whoever holds the token gets the secret exactly once — the first successful read delivers it and destroys it, and a second read returns nothing. Slidingbox stores only ciphertext: the decryption key travels in the token and is never sent to the server. That is why this runs locally over stdio rather than as a remote MCP server — a remote one would have to receive your plaintext in order to encrypt it.\n\nStoring is free. Reading costs $0.02, covered either by an issued evaluation key or by a Base wallet paying per call over x402 — no account, no invoice, no subscription. Secrets live 60–900 seconds and then expire. Not storage, backup, messaging, or key management.",
+	"author": {
+		"name": "SLIDINGBOX LLC",
+		"email": "support@slidingbox.ai",
+		"url": "https://slidingbox.ai"
+	},
+	"homepage": "https://slidingbox.ai",
+	"documentation": "https://slidingbox.ai/developers",
+	"support": "mailto:support@slidingbox.ai",
+	"server": {
+		"type": "node",
+		"entry_point": "server.mjs",
+		"mcp_config": {
+			"command": "node",
+			"args": ["${__dirname}/server.mjs"],
+			"env": {
+				"SLIDINGBOX_API_KEY": "${user_config.api_key}",
+				"SLIDINGBOX_PRIVATE_KEY": "${user_config.private_key}",
+				"SLIDINGBOX_URL": "${user_config.base_url}"
+			}
+		}
+	},
+	"tools": [
+		{
+			"name": "store_secret",
+			"description": "Encrypt a secret locally and store the ciphertext on Slidingbox. Returns one token carrying the pointer and the key."
+		},
+		{
+			"name": "retrieve_secret",
+			"description": "Read a secret once, using the token from store_secret. The read destroys it."
+		}
+	],
+	"keywords": ["secrets", "encryption", "x402", "agent", "handoff"],
+	"license": "ISC",
+	"privacy_policies": ["https://slidingbox.ai/privacy"],
+	"compatibility": {
+		"platforms": ["darwin", "win32", "linux"],
+		"runtimes": { "node": ">=20.0.0" }
+	},
+	"user_config": {
+		"api_key": {
+			"type": "string",
+			"title": "Evaluation key",
+			"description": "An issued key (sbk_<id>.<hmac>) covering a fixed number of free reads. Ask support@slidingbox.ai. Leave blank if paying by wallet.",
+			"sensitive": true,
+			"required": false
+		},
+		"private_key": {
+			"type": "string",
+			"title": "Base wallet private key",
+			"description": "A wallet holding USDC on Base. Each read costs $0.02, paid over x402. Use a wallet funded for this and nothing else. Leave blank if using an evaluation key.",
+			"sensitive": true,
+			"required": false
+		},
+		"base_url": {
+			"type": "string",
+			"title": "Service URL",
+			"description": "Leave as-is unless you were told otherwise.",
+			"required": false,
+			"default": "https://slidingbox.ai"
+		}
+	}
+}

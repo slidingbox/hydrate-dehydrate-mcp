@@ -1,0 +1,4 @@
+# Repo-side artifacts that are not part of the distributed server.
+REGISTRIES.md
+server.json
+test.mjs
