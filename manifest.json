@@ -2,13 +2,17 @@
 	"manifest_version": "0.3",
 	"name": "slidingbox-hydrate-dehydrate",
 	"display_name": "Slidingbox Hydrate/Dehydrate",
-	"version": "0.1.3",
+	"version": "0.1.4",
 	"description": "Hand a secret to another agent as an encrypted, pay-per-read token, delivered exactly once.",
 	"long_description": "`store_secret` encrypts on your machine (AES-256-GCM) and returns one token. Whoever holds the token gets the secret exactly once — the first successful read delivers it and destroys it, and a second read returns nothing. Slidingbox stores only ciphertext: the decryption key travels in the token and is never sent to the server. That is why this runs locally over stdio rather than as a remote MCP server — a remote one would have to receive your plaintext in order to encrypt it.\n\nStoring is free. Reading costs $0.02, covered either by an issued evaluation key or by a Base wallet paying per call over x402 — no account, no invoice, no subscription. Secrets live 60–900 seconds and then expire. Not storage, backup, messaging, or key management.",
 	"author": {
 		"name": "SLIDINGBOX LLC",
 		"email": "support@slidingbox.ai",
 		"url": "https://slidingbox.ai"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/slidingbox/hydrate-dehydrate-mcp.git"
 	},
 	"homepage": "https://slidingbox.ai",
 	"documentation": "https://slidingbox.ai/developers",
@@ -41,7 +45,9 @@
 	"privacy_policies": ["https://slidingbox.ai/privacy"],
 	"compatibility": {
 		"platforms": ["darwin", "win32", "linux"],
-		"runtimes": { "node": ">=20.0.0" }
+		"runtimes": {
+			"node": ">=20.0.0"
+		}
 	},
 	"user_config": {
 		"api_key": {
