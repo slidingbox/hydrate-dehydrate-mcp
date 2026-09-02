@@ -2,3 +2,5 @@
 REGISTRIES.md
 server.json
 test.mjs
+smithery-config.json
+smithery-release.mjs

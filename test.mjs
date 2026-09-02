@@ -18,6 +18,21 @@ import {
 
 const POINTER = "sb_a1B2c3D4e5F6g7H8i9J0k1L2m3N4o5P6q7R8s9T0u1V";
 
+// The version is written in four places across three manifests, and drift only
+// shows up at publish time: the official registry rejects a server.json whose
+// version is not the one on npm, and a stale manifest.json ships a bundle that
+// misreports itself to Smithery users.
+const require = createRequire(import.meta.url);
+const { version } = require("./package.json");
+const serverJson = require("./server.json");
+assert.equal(serverJson.version, version, "server.json version");
+assert.equal(
+	serverJson.packages[0].version,
+	version,
+	"server.json npm package version",
+);
+assert.equal(require("./manifest.json").version, version, "manifest.json");
+
 const secret = "correct horse battery staple — ünïcode, \n newlines, 🔐";
 const { ciphertext, iv, key } = await encrypt(secret);
 assert.equal(await decrypt({ ciphertext, iv, key }), secret, "round-trip");
@@ -149,7 +164,7 @@ assert.equal(
 // Drift between these two is invisible until a user reads it in their client.
 assert.equal(
 	reply.result.serverInfo.version,
-	createRequire(import.meta.url)("./package.json").version,
+	version,
 	"serverInfo.version tracks package.json",
 );
 
