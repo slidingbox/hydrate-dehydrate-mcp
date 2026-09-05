@@ -14,6 +14,7 @@
 		"type": "git",
 		"url": "https://github.com/slidingbox/hydrate-dehydrate-mcp.git"
 	},
+	"icon": "icon.png",
 	"homepage": "https://slidingbox.ai",
 	"documentation": "https://slidingbox.ai/developers",
 	"support": "mailto:support@slidingbox.ai",
