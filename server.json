@@ -8,14 +8,14 @@
 		"source": "github",
 		"id": "1354322318"
 	},
-	"version": "0.1.5",
+	"version": "0.1.6",
 	"websiteUrl": "https://slidingbox.ai",
 	"packages": [
 		{
 			"registryType": "npm",
 			"registryBaseUrl": "https://registry.npmjs.org",
 			"identifier": "@slidingbox/hydrate-dehydrate-mcp",
-			"version": "0.1.5",
+			"version": "0.1.6",
 			"runtimeHint": "npx",
 			"transport": {
 				"type": "stdio"

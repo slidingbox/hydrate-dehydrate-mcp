@@ -50,6 +50,15 @@ assert.deepEqual(
 	"tolerates whitespace",
 );
 
+// The largest secret store_secret accepts must produce a ciphertext the server
+// accepts: 131072 bytes decoded, and AES-GCM adds a 16-byte tag.
+const { ciphertext: maxCiphertext } = await encrypt("a".repeat(131072 - 16));
+assert.equal(
+	Buffer.from(maxCiphertext, "base64url").length,
+	131072,
+	"max plaintext fills the server cap exactly",
+);
+
 // A wrong key must fail closed, not return garbage.
 const { key: otherKey } = await encrypt("something else");
 await assert.rejects(

@@ -32,8 +32,10 @@ const PRIVATE_KEY = env("SLIDINGBOX_PRIVATE_KEY");
 const NETWORK = env("SLIDINGBOX_NETWORK") ?? "eip155:8453";
 
 // Mirrors the server's own limits so a too-large secret fails here with a
-// sentence instead of a 413 from three layers down.
-const MAX_PLAINTEXT_BYTES = 131072;
+// sentence instead of a 413 from three layers down. The server caps the
+// ciphertext, and AES-GCM appends a 16-byte tag, so the plaintext cap is
+// 16 bytes short of it.
+const MAX_PLAINTEXT_BYTES = 131072 - 16;
 const TTL_MIN_SECONDS = 60;
 const TTL_MAX_SECONDS = 900;
 
