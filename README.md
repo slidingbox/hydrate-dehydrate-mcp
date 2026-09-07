@@ -38,7 +38,7 @@ Storing is free. Reading costs $0.02, and there are two ways to cover it:
 
 | Variable | What it does |
 | --- | --- |
-| `SLIDINGBOX_API_KEY` | An issued evaluation key (`sbk_<id>.<hmac>`). Covers a fixed number of reads for free. Ask support@slidingbox.ai. |
+| `SLIDINGBOX_API_KEY` | An evaluation key (`sbk_<id>.<hmac>`). Covers a fixed number of reads for free. Get one instantly: `curl -X POST https://slidingbox.ai/v1/key` — no account, no email. |
 | `SLIDINGBOX_PRIVATE_KEY` | A Base wallet holding USDC. Reads are paid per call over [x402](https://x402.org) — no account, no invoice, no subscription. |
 | `SLIDINGBOX_URL` | Defaults to `https://slidingbox.ai`. |
 | `SLIDINGBOX_NETWORK` | Defaults to `eip155:8453` (Base mainnet). |

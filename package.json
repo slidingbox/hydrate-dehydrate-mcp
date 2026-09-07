@@ -1,6 +1,6 @@
 {
 	"name": "@slidingbox/hydrate-dehydrate-mcp",
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"mcpName": "ai.slidingbox/hydrate-dehydrate",
 	"description": "MCP server for Slidingbox: hand a secret from one agent to another as an encrypted, pay-per-read, delivered-once pointer.",
 	"type": "module",

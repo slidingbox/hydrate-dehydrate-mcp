@@ -8,14 +8,14 @@
 		"source": "github",
 		"id": "1354322318"
 	},
-	"version": "0.1.6",
+	"version": "0.1.7",
 	"websiteUrl": "https://slidingbox.ai",
 	"packages": [
 		{
 			"registryType": "npm",
 			"registryBaseUrl": "https://registry.npmjs.org",
 			"identifier": "@slidingbox/hydrate-dehydrate-mcp",
-			"version": "0.1.6",
+			"version": "0.1.7",
 			"runtimeHint": "npx",
 			"transport": {
 				"type": "stdio"
@@ -23,7 +23,7 @@
 			"environmentVariables": [
 				{
 					"name": "SLIDINGBOX_API_KEY",
-					"description": "Evaluation key (sbk_<id>.<hmac>) covering a fixed number of free reads. Ask support@slidingbox.ai.",
+					"description": "Evaluation key (sbk_<id>.<hmac>) covering a fixed number of free reads. Get one instantly with: curl -X POST https://slidingbox.ai/v1/key",
 					"isRequired": false,
 					"isSecret": true,
 					"format": "string"
