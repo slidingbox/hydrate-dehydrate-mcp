@@ -15,6 +15,16 @@ store_secret("sk-live-...")  ->  sb_PApm-Ui...#0zgYgq2d...
 retrieve_secret("sb_PApm-Ui...#0zgYgq2d...")  ->  sk-live-...   (and it's gone)
 ```
 
+A third tool, `verify_endpoint`, answers a different question: before your agent
+pays an unfamiliar x402 endpoint, is it live, is it payable, and do its price
+and payee still match what the CDP Bazaar catalog advertises.
+
+```
+verify_endpoint("https://example.com/v1/thing")
+  ->  {"payable": true, "price_matches_catalog": false,
+       "reason_codes": ["price_drift"], "last_changed_at": "2026-09-01T..."}
+```
+
 ## Install
 
 ```json
@@ -34,7 +44,8 @@ Claude Desktop, or `claude mcp add` for Claude Code.
 
 ## Paying for reads
 
-Storing is free. Reading costs $0.02, and there are two ways to cover it:
+Storing is free. Reading costs $0.02 and a verify costs $0.01. Two ways to cover
+either:
 
 | Variable | What it does |
 | --- | --- |
@@ -43,8 +54,8 @@ Storing is free. Reading costs $0.02, and there are two ways to cover it:
 | `SLIDINGBOX_URL` | Defaults to `https://slidingbox.ai`. |
 | `SLIDINGBOX_NETWORK` | Defaults to `eip155:8453` (Base mainnet). |
 
-With neither set, `store_secret` still works and `retrieve_secret` tells you
-which one to configure. `SLIDINGBOX_PRIVATE_KEY` signs payments: give it a
+With neither set, `store_secret` still works, and `retrieve_secret` and
+`verify_endpoint` tell you which one to configure. `SLIDINGBOX_PRIVATE_KEY` signs payments: give it a
 wallet funded for this purpose and nothing else.
 
 ## What it is good for

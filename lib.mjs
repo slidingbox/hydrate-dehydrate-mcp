@@ -270,3 +270,38 @@ server.registerTool(
 		}
 	},
 );
+
+server.registerTool(
+	"verify_endpoint",
+	{
+		title: "Verify an x402 endpoint",
+		description:
+			"Check an x402 endpoint before paying it: whether it is live and payable, whether its live price and payee still match the CDP Bazaar catalog listing, and when either last changed. Use before the first payment to an endpoint you have not used. Paid (x402) unless an evaluation key is configured.",
+		inputSchema: {
+			resource: z
+				.string()
+				.url()
+				.describe("Absolute URL of the x402 resource to check."),
+		},
+		// Reads only: it makes one request to the endpoint under test and
+		// changes nothing there or here.
+		annotations: {
+			readOnlyHint: true,
+			destructiveHint: false,
+			openWorldHint: true,
+		},
+	},
+	async ({ resource }) => {
+		let res;
+		try {
+			res = await payingFetch(
+				`${BASE_URL}/v1/verify?resource=${encodeURIComponent(resource)}`,
+				{ headers: API_KEY ? { "x-api-key": API_KEY } : {} },
+			);
+		} catch (error) {
+			return fail(explainUnreachable(error, BASE_URL));
+		}
+		if (!res.ok) return fail(await readError(res));
+		return ok(JSON.stringify(await res.json(), null, 2));
+	},
+);
