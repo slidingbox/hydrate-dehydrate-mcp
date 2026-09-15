@@ -2,7 +2,7 @@
 	"manifest_version": "0.3",
 	"name": "slidingbox-hydrate-dehydrate",
 	"display_name": "Slidingbox Hydrate/Dehydrate",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"description": "Hand a secret to another agent as an encrypted, pay-per-read token delivered exactly once, and pre-flight an x402 endpoint before paying it.",
 	"long_description": "`store_secret` encrypts on your machine (AES-256-GCM) and returns one token. Whoever holds the token gets the secret exactly once \u2014 the first successful read delivers it and destroys it, and a second read returns nothing. Slidingbox stores only ciphertext: the decryption key travels in the token and is never sent to the server. That is why this runs locally over stdio rather than as a remote MCP server \u2014 a remote one would have to receive your plaintext in order to encrypt it.\n\n`verify_endpoint` answers a different question: before your agent pays an unfamiliar x402 endpoint, is it reachable, does it present a valid payment challenge, and do its live price and payee still match what the CDP Bazaar catalog advertises. It returns a bounded JSON verdict with reason codes, and it never pays the endpoint under test.\n\nStoring is free. A read costs $0.02 and a verify costs $0.01, covered either by an issued evaluation key or by a Base wallet paying per call over x402 \u2014 no account, no invoice, no subscription. Secrets live 60\u2013900 seconds and then expire. Not storage, backup, messaging, or key management.",
 	"author": {
@@ -45,7 +45,16 @@
 			"description": "Check whether an x402 endpoint is live, payable, and still priced as its catalog listing claims, before paying it."
 		}
 	],
-	"keywords": ["secrets", "encryption", "x402", "agent", "handoff", "payability", "pre-flight", "endpoint-health"],
+	"keywords": [
+		"secrets",
+		"encryption",
+		"x402",
+		"agent",
+		"handoff",
+		"payability",
+		"pre-flight",
+		"endpoint-health"
+	],
 	"license": "ISC",
 	"privacy_policies": ["https://slidingbox.ai/privacy"],
 	"compatibility": {

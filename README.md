@@ -25,6 +25,19 @@ verify_endpoint("https://example.com/v1/thing")
        "reason_codes": ["price_drift"], "last_changed_at": "2026-09-01T..."}
 ```
 
+## Why there is no hosted version
+
+There is deliberately no hosted instance of this server, and no entry under
+Glama's connectors or any other remote-MCP directory. `store_secret` encrypts in
+the process it runs in, so a hosted instance would receive your plaintext before
+it ever became ciphertext, and `retrieve_secret` takes a token that carries the
+decryption key. Hosting either one moves the secret into somebody else's
+environment, which is the exact thing this exists to avoid.
+
+Running it locally is the feature, not a limitation. The `Dockerfile` in this
+repo exists so directory listing checks can start the server and introspect it;
+it is not a deployment target.
+
 ## Install
 
 ```json
@@ -75,9 +88,7 @@ and then expire. Not for protected health information or payment-card data.
 
 Encryption is AES-256-GCM, done in this process before anything is sent. The
 server receives `{ciphertext, iv}` and a time-to-live, and returns an opaque
-pointer. That is the whole reason this is a local stdio server rather than a
-route on the API: a remote MCP server would have to receive your plaintext in
-order to encrypt it.
+pointer.
 
 Payment, when a wallet is configured, is x402 — the read returns `402`, the
 client signs an EIP-3009 authorization for $0.02 USDC, and retries. Paying

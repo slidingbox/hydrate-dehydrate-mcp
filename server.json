@@ -2,20 +2,20 @@
 	"$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
 	"name": "ai.slidingbox/hydrate-dehydrate",
 	"title": "Slidingbox Hydrate/Dehydrate",
-	"description": "Hand off a secret as an encrypted pay-per-read token; pre-flight an x402 endpoint before paying it.",
+	"description": "Hand off a secret as an encrypted pay-per-read token; pre-flight an x402 endpoint before paying it. Local stdio by design \u2014 encryption happens in your process, so there is no hosted version to hand your plaintext to.",
 	"repository": {
 		"url": "https://github.com/slidingbox/hydrate-dehydrate-mcp",
 		"source": "github",
 		"id": "1354322318"
 	},
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"websiteUrl": "https://slidingbox.ai",
 	"packages": [
 		{
 			"registryType": "npm",
 			"registryBaseUrl": "https://registry.npmjs.org",
 			"identifier": "@slidingbox/hydrate-dehydrate-mcp",
-			"version": "0.2.1",
+			"version": "0.2.2",
 			"runtimeHint": "npx",
 			"transport": {
 				"type": "stdio"
