@@ -1,6 +1,6 @@
 {
 	"name": "@slidingbox/hydrate-dehydrate-mcp",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"mcpName": "ai.slidingbox/hydrate-dehydrate",
 	"description": "MCP server for Slidingbox: hand a secret from one agent to another as an encrypted, pay-per-read, delivered-once pointer, and pre-flight an x402 endpoint before paying it. Local stdio by design \u2014 it encrypts in your own process, so there is no hosted version to hand your plaintext to.",
 	"type": "module",
@@ -39,7 +39,7 @@
 		"node": ">=20"
 	},
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.0.0",
+		"@modelcontextprotocol/sdk": "^1.26.0",
 		"@x402/evm": "^2.20.0",
 		"@x402/fetch": "^2.20.0",
 		"viem": "^2.55.0",
