@@ -177,4 +177,15 @@ assert.equal(
 	"serverInfo.version tracks package.json",
 );
 
+// Every tool the manifest advertises must be registered, and the reverse: a
+// directory lists what manifest.json says, a client gets what the server has.
+const { server } = await import("./lib.mjs");
+assert.deepEqual(
+	Object.keys(server._registeredTools).sort(),
+	require("./manifest.json")
+		.tools.map((t) => t.name)
+		.sort(),
+	"manifest.json tools match the registered tools",
+);
+
 console.log("@slidingbox/hydrate-dehydrate-mcp self-check PASS");

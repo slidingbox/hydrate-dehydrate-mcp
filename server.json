@@ -2,20 +2,20 @@
 	"$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
 	"name": "ai.slidingbox/hydrate-dehydrate",
 	"title": "Slidingbox Hydrate/Dehydrate",
-	"description": "Encrypted pay-per-read secret handoff and x402 pre-flight. Local stdio only, no hosted version.",
+	"description": "Encrypted one-time secret handoff, x402 pre-flight, and web page change checks and watches.",
 	"repository": {
 		"url": "https://github.com/slidingbox/hydrate-dehydrate-mcp",
 		"source": "github",
 		"id": "1354322318"
 	},
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"websiteUrl": "https://slidingbox.ai",
 	"packages": [
 		{
 			"registryType": "npm",
 			"registryBaseUrl": "https://registry.npmjs.org",
 			"identifier": "@slidingbox/hydrate-dehydrate-mcp",
-			"version": "0.2.3",
+			"version": "0.3.0",
 			"runtimeHint": "npx",
 			"transport": {
 				"type": "stdio"

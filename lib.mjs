@@ -27,6 +27,10 @@ const BASE_URL = (env("SLIDINGBOX_URL") ?? "https://slidingbox.ai").replace(
 	/\/$/,
 	"",
 );
+// URL Drift Witness runs on its own host (its own Worker, its own wallet).
+const DRIFT_URL = (
+	env("SLIDINGBOX_DRIFT_URL") ?? "https://drift.slidingbox.ai"
+).replace(/\/$/, "");
 const API_KEY = env("SLIDINGBOX_API_KEY");
 const PRIVATE_KEY = env("SLIDINGBOX_PRIVATE_KEY");
 const NETWORK = env("SLIDINGBOX_NETWORK") ?? "eip155:8453";
@@ -303,5 +307,85 @@ server.registerTool(
 		}
 		if (!res.ok) return fail(await readError(res));
 		return ok(JSON.stringify(await res.json(), null, 2));
+	},
+);
+
+// URL Drift Witness. Evaluation keys do not cover these; they are paid by
+// wallet only, so the 402 wording differs from the relay's.
+const DRIFT_PAYMENT =
+	"This costs a payment. Set SLIDINGBOX_PRIVATE_KEY to a Base wallet holding a little USDC (evaluation keys do not cover drift checks), and retry.";
+
+async function driftResult(res) {
+	if (res.status === 402) return fail(DRIFT_PAYMENT);
+	if (!res.ok) return fail(await readError(res));
+	return ok(JSON.stringify(await res.json(), null, 2));
+}
+
+server.registerTool(
+	"has_page_changed",
+	{
+		title: "Has this page changed?",
+		description:
+			"Check whether a public web page has changed since it was last checked, by anyone: HTTP status, redirect target, content type, which sections changed (by position), and whether the set of scripts it loads changed. Returns what was observed and from where, never the page itself and never a safe/unsafe verdict. A page's first check is free; later checks cost $0.05 over x402.",
+		inputSchema: {
+			url: z.string().url().describe("The http(s) page to check."),
+		},
+		// One GET of a public page. It records an observation on the service,
+		// but changes nothing on the page itself.
+		annotations: {
+			readOnlyHint: true,
+			destructiveHint: false,
+			openWorldHint: true,
+		},
+	},
+	async ({ url }) => {
+		let res;
+		try {
+			res = await payingFetch(
+				`${DRIFT_URL}/v1/drift?url=${encodeURIComponent(url)}`,
+			);
+		} catch (error) {
+			return fail(explainUnreachable(error, DRIFT_URL));
+		}
+		return driftResult(res);
+	},
+);
+
+server.registerTool(
+	"watch_page",
+	{
+		title: "Watch this page for changes",
+		description:
+			"Watch a public web page for 7 days: it is checked hourly (168 checks), and each time a check finds a change, a POST signed with HMAC-SHA256 goes to your https callback. One payment of $0.50 over x402; it ends by itself, with nothing to renew or cancel. Returns the watch id and the secret that verifies callbacks (X-Drift-Signature: sha256=<hex HMAC of the raw body>). Keep the secret: it is shown once.",
+		inputSchema: {
+			url: z.string().url().describe("The http(s) page to watch."),
+			callback: z
+				.string()
+				.url()
+				.describe(
+					"An https URL that will receive a signed POST on each change.",
+				),
+		},
+		// It buys something and creates state on the service, so it is not
+		// read-only; nothing existing is modified or destroyed.
+		annotations: {
+			readOnlyHint: false,
+			destructiveHint: false,
+			idempotentHint: false,
+			openWorldHint: true,
+		},
+	},
+	async ({ url, callback }) => {
+		let res;
+		try {
+			res = await payingFetch(`${DRIFT_URL}/v1/drift/watch`, {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ url, callback }),
+			});
+		} catch (error) {
+			return fail(explainUnreachable(error, DRIFT_URL));
+		}
+		return driftResult(res);
 	},
 );

@@ -2,9 +2,9 @@
 	"manifest_version": "0.3",
 	"name": "slidingbox-hydrate-dehydrate",
 	"display_name": "Slidingbox Hydrate/Dehydrate",
-	"version": "0.2.3",
-	"description": "Hand a secret to another agent as an encrypted, pay-per-read token delivered exactly once, and pre-flight an x402 endpoint before paying it.",
-	"long_description": "`store_secret` encrypts on your machine (AES-256-GCM) and returns one token. Whoever holds the token gets the secret exactly once \u2014 the first successful read delivers it and destroys it, and a second read returns nothing. Slidingbox stores only ciphertext: the decryption key travels in the token and is never sent to the server. That is why this runs locally over stdio rather than as a remote MCP server \u2014 a remote one would have to receive your plaintext in order to encrypt it.\n\n`verify_endpoint` answers a different question: before your agent pays an unfamiliar x402 endpoint, is it reachable, does it present a valid payment challenge, and do its live price and payee still match what the CDP Bazaar catalog advertises. It returns a bounded JSON verdict with reason codes, and it never pays the endpoint under test.\n\nStoring is free. A read costs $0.02 and a verify costs $0.01, covered either by an issued evaluation key or by a Base wallet paying per call over x402 \u2014 no account, no invoice, no subscription. Secrets live 60\u2013900 seconds and then expire. Not storage, backup, messaging, or key management.",
+	"version": "0.3.0",
+	"description": "Hand a secret to another agent as an encrypted token delivered exactly once, pre-flight an x402 endpoint, and check or watch whether a web page has changed.",
+	"long_description": "`store_secret` encrypts on your machine (AES-256-GCM) and returns one token. Whoever holds the token gets the secret exactly once \u2014 the first successful read delivers it and destroys it, and a second read returns nothing. Slidingbox stores only ciphertext: the decryption key travels in the token and is never sent to the server. That is why this runs locally over stdio rather than as a remote MCP server \u2014 a remote one would have to receive your plaintext in order to encrypt it.\n\n`verify_endpoint` answers a different question: before your agent pays an unfamiliar x402 endpoint, is it reachable, does it present a valid payment challenge, and do its live price and payee still match what the CDP Bazaar catalog advertises. It returns a bounded JSON verdict with reason codes, and it never pays the endpoint under test.\n\n`has_page_changed` and `watch_page` answer a third question: has this web page changed since it was last checked, by anyone? Every check of a URL is kept as hashes, so you learn what changed \u2014 status, redirect target, content type, which sections by position, and whether the set of scripts it loads changed \u2014 without the page itself ever being stored or returned. A page's first check is free and later ones cost $0.05; a 7-day watch with hourly checks and a signed callback on each change costs $0.50 once.\n\nStoring is free. A read costs $0.02 and a verify costs $0.01, covered either by an issued evaluation key or by a Base wallet paying per call over x402 \u2014 no account, no invoice, no subscription. Secrets live 60\u2013900 seconds and then expire. Not storage, backup, messaging, or key management.",
 	"author": {
 		"name": "SLIDINGBOX LLC",
 		"email": "support@slidingbox.ai",
@@ -43,6 +43,14 @@
 		{
 			"name": "verify_endpoint",
 			"description": "Check whether an x402 endpoint is live, payable, and still priced as its catalog listing claims, before paying it."
+		},
+		{
+			"name": "has_page_changed",
+			"description": "Check whether a web page has changed since it was last checked, by anyone: status, redirect, content type, sections, scripts. First check free."
+		},
+		{
+			"name": "watch_page",
+			"description": "Watch a web page for 7 days with hourly checks and a signed callback on each change. One payment, ends by itself."
 		}
 	],
 	"keywords": [
@@ -74,7 +82,7 @@
 		"private_key": {
 			"type": "string",
 			"title": "Base wallet private key",
-			"description": "A wallet holding USDC on Base. Each read costs $0.02, paid over x402. Use a wallet funded for this and nothing else. Leave blank if using an evaluation key.",
+			"description": "A wallet holding USDC on Base, paying per call over x402: a read $0.02, a verify $0.01, a page-change check $0.05 (first check free), a watch $0.50. Use a wallet funded for this and nothing else. Leave blank if using an evaluation key.",
 			"sensitive": true,
 			"required": false
 		},

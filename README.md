@@ -25,6 +25,25 @@ verify_endpoint("https://example.com/v1/thing")
        "reason_codes": ["price_drift"], "last_changed_at": "2026-09-01T..."}
 ```
 
+Two more tools answer a third question: **has this web page changed since it was
+last checked — by anyone?** Every check of a URL is kept as hashes, so you learn
+what changed without the page ever being stored or returned.
+
+```
+has_page_changed("https://vendor.example/pricing")
+  ->  {"changed": {"content": true, "scripts": false, ...},
+       "sections": {"total": 12, "changed": [3]},
+       "history": {"observations": 7, "last_changed_at": "2026-09-18T..."}}
+
+watch_page("https://shop.example/checkout", "https://my-agent.example/hooks/drift")
+  ->  {"watch_id": "...", "secret": "...", "checks": 168, "expires_at": "..."}
+      then a signed POST to the callback whenever an hourly check finds a change
+```
+
+`changed.scripts` reports whether the set of external scripts a page loads has
+changed — the kind of change PCI DSS 11.6.1 asks payment-page operators to
+detect. It is an observation from outside the page, not a compliance control.
+
 ## Why there is no hosted version
 
 There is deliberately no hosted instance of this server, and no entry under
@@ -57,14 +76,17 @@ Claude Desktop, or `claude mcp add` for Claude Code.
 
 ## Paying for reads
 
-Storing is free. Reading costs $0.02 and a verify costs $0.01. Two ways to cover
-either:
+Storing is free. Reading costs $0.02 and a verify costs $0.01. A page's first
+`has_page_changed` is free; later checks cost $0.05, and a `watch_page` costs $0.50
+once. Evaluation keys cover reads and verifies; page checks and watches are paid by
+wallet only. The ways to pay:
 
 | Variable | What it does |
 | --- | --- |
 | `SLIDINGBOX_API_KEY` | An evaluation key (`sbk_<id>.<hmac>`). Covers a fixed number of reads for free. Get one instantly: `curl -X POST https://slidingbox.ai/v1/key` — no account, no email. |
 | `SLIDINGBOX_PRIVATE_KEY` | A Base wallet holding USDC. Reads are paid per call over [x402](https://x402.org) — no account, no invoice, no subscription. |
 | `SLIDINGBOX_URL` | Defaults to `https://slidingbox.ai`. |
+| `SLIDINGBOX_DRIFT_URL` | Defaults to `https://drift.slidingbox.ai` (page checks and watches). |
 | `SLIDINGBOX_NETWORK` | Defaults to `eip155:8453` (Base mainnet). |
 
 With neither set, `store_secret` still works, and `retrieve_secret` and
