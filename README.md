@@ -1,5 +1,9 @@
 # @slidingbox/hydrate-dehydrate-mcp
 
+> **Discontinued:** SlidingBox was permanently decommissioned on 2026-09-21.
+> Its service endpoints are unavailable. This repository remains archived as an
+> accurate historical record; do not install or depend on this package.
+
 An MCP server for handing a secret from one agent, machine, or person to another
 without leaving a copy behind.
 
